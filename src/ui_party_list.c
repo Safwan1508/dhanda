@@ -7,13 +7,8 @@ void ui_party_list(struct dhanda *app)
 	Node *ptr;
 	party *p;
 	ptr = app->party_list->head;
-	/*printf("\x1b[30;106m  \x1b[1m \x1b[3m DHANDA > PARTY > LIST                    \n\n");
-	printf("\x1b[0m");*/
-	sky();
-	bold();
-	centreprint("DHANDA > PARTY > LIST");
-	printf("\n\n");
-	reset();
+
+	print_heading("DHANDA > PARTY > LIST");
 	grey();
 
 	printf("   %-13s %-20s %-20s %-15s %-10s\n\n\n", "ID", "FIRST NAME", "LAST NAME", "AMOUNT", "PHONE");

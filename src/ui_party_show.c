@@ -11,15 +11,16 @@ void ui_party_show(struct dhanda *app)
 	char lname[32];
 	char phone[12];
 	int amount;
+	struct tm* tm;
+	char created_at[64];
+	char updated_at[64];
+
 
 	debug_print("");
 	p = party_first_in_list(app);
 
-	sky();
-	bold();
-	centreprint("DHANDA > PARTY > SHOW");
-	printf("\n\n");
-	reset();
+
+	print_heading("DHANDA > PARTY > SHOW");
 
 	grey();
 	printf("   ID NO      : %d               \n\n", p->id);
@@ -30,6 +31,11 @@ void ui_party_show(struct dhanda *app)
 	printf("\n\n");
 
 	printf("   PHONE NO   : %s               \n\n", p->phone);
+	//p.created_at = t;
+
+
+	//tm = localtime(&p->created_at);
+	//strftime(created_at, sizeof(created_at), "%Y-%d-%m", tm);
 	reset();
 	
 }

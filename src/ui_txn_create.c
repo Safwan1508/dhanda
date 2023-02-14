@@ -10,11 +10,7 @@ void ui_txn_create(struct dhanda *app)
 	int len;
 	debug_print("");
 
-	sky();
-	bold();
-	centreprint("DHANDA > TRANSACTION > CREATE");
-	printf("\n\n");
-	reset();
+	print_heading("DHANDA > TRANSACTION > CREATE");
 	printf("   PARTY ID : ");
 	scanf("%d", &t.party_id);
 	printf("\n");

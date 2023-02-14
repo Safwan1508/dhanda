@@ -8,11 +8,8 @@ void ui_txn_list(struct dhanda *app)
 	txn *t;
 	debug_print("");
 
-	sky();
-	bold();
-	centreprint("DHANDA > TRANSACTION > LIST");
-	printf("\n\n");
-	reset();
+
+	print_heading("DHANDA > TRANSACTION > LIST");
 	printf("   ID         PARTY_ID            AMOUNT          DEBIT/CREDIT(D/C)\n");
 	printf("\n\n");
 

@@ -17,11 +17,8 @@ void ui_party_edit(struct dhanda *app)
 
 	debug_print("");
 
-	sky();
-	bold();
-	centreprint("DHANDA > PARTY > EDIT");
-	printf("\n\n");
-	reset();
+
+	print_heading("DHANDA > PARTY > EDIT");
 
 	printf("FIRST NAME :  %s\n\n", old_party->fname);
 	printf("LAST NAME  :  %s\n\n", old_party->lname);

@@ -5,37 +5,33 @@
 
 void ui_party_create(struct dhanda *app)
 {
-	/*long int phone = 9748538411,
-		amount = 10000;
-	char fname[64] = "Safwan", lname[64] = "Haider";
-	*/
 	party p;
 	int len;
 	long ret;
 	char s[100];
 	char *ptr;
+	time_t t;
 
-
-	sky();
-	bold();
-	centreprint("DHANDA > PARTY > CREATE");
-	printf("\n\n");
-	reset();
-	grey();
+	print_heading("DHANDA > PARTY > CREATE");
 	printf("   FIRST NAME :  ");
-	get_string(p.fname, sizeof(p.fname));
+	input_valid_string(p.fname, sizeof(p.fname), check_name);
+	title_case(p.fname);
 	printf("\n");
 	printf("   LAST NAME  :  ");
-	get_string(p.lname, sizeof(p.lname));
+	input_valid_string(p.lname, sizeof(p.lname), check_name);
+	title_case(p.lname);
 	printf("\n");
 	printf("   PHONE      :  ");
-	get_string(p.phone, sizeof(p.phone));
-	
+	input_valid_string(p.phone, sizeof(p.phone), check_phone);
 	printf("\n");
 	printf("  AMOUNT     :  ");
-    scanf("%d",&p.amount);
+	//input_valid_string(p.amount, sizeof(p.amount), check_amount);
+    char res = scanf("%d",&p.amount);
+	check_amount(res);
 		
 	reset();
+
+
 	party_insert_in_list(app, &p);
 
 	puts("");

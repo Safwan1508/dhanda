@@ -11,11 +11,9 @@ ui_home(dhanda *app)
 		debit = 144,
 		credit = 12;
 
-	sky();
-	bold();
-	centreprint("DHANDA");
-	printf("\n\n");
-	reset();
+
+
+	print_heading("DHANDA");
 	printf("Total # txn     Total amount   Total # party    Total debit     Total credit");
 	printf("\n");
 	printf("___________     ____________   _____________    ___________     ____________");

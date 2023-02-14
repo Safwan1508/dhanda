@@ -1,6 +1,9 @@
 #include <dhanda/dhanda.h>
 #include <dhanda/util.h>
 
+#include <sys/types.h>
+#include <regex.h>
+
 int get_line(char line[], int size)
 {
 	int i;
@@ -50,8 +53,15 @@ void grey(){
 void reset () {
   printf("\x1b[0m");
 }
+void italic(){
+	printf("\x1b[3m");
+}
 void bold(){
 	printf("\x1b[1m");
+}
+void framed()
+{
+	printf("\x1b[51m");
 }
 void green(){
 	printf("\x1b[30;42m");
@@ -70,27 +80,14 @@ void warning(){
 }
 
 
-//CENTRE PRINTING FUNCTION
-
-void centreprint(char *s)
+void print_heading(char *s)
 {
-
-	int len = strlen(s);
-	int x = 136;
-
-	int sp = x - len;
-
-	for (int i = 0; i < sp / 2; ++i)
-	{
-
-		printf(" ");
-	}
+	bold();
+	italic();
+	printf("\x1b[92;100m");
 	printf("%s", s);
-	for (int i = 0; i < sp / 2; ++i)
-	{
-		printf(" ");
-	}
-
+	printf("\n\n");
+	reset();
 }
 
 void print_success(char *s)
@@ -114,3 +111,94 @@ void print_warning(char *s)
 
 
 
+
+int check_name(char *s)
+{
+	char *pattern = "^[a-zA-Z ]{2,31}$";
+	char buff[1024];
+
+	int err;
+
+	regex_t rgx;
+
+	if ((err = regcomp(&rgx, pattern, REG_EXTENDED)) != 0)
+	{
+		return -1;
+	}
+	
+	if(regexec(&rgx, s, 0, NULL, 0) == REG_NOMATCH)
+	{
+		return -1;
+	}
+
+	return 0;
+
+
+
+}
+
+int check_phone(char *s)
+{
+	char *pattern = "^[0-9]{10}$";
+	char buff[1024];
+
+	int err;
+
+	regex_t rgx;
+
+	if ((err = regcomp(&rgx, pattern, REG_EXTENDED)) != 0)
+	{
+		return -1;
+	}
+	
+	if(regexec(&rgx, s, 0, NULL, 0) == REG_NOMATCH)
+	{
+		return -1;
+	}
+
+	return 0;
+}
+
+void input_valid_string(char *in, size_t size, int (*validator)(char *))
+{
+	while (1)
+	{
+		
+		get_string(in, size);
+		
+
+		if (validator(in) == 0)
+		{
+			break;
+		}
+		print_error("Invalid input\n");
+		printf("              >  ");
+	}
+	
+}
+
+void check_amount(char  res)
+{
+	while (1)
+	{
+		if (res == 1) {
+            break;
+        } else {
+            printf("Invalid input. Please enter a number.\n");
+			printf("              >  ");
+            while ((res = getchar()) != '\n' && res != EOF);
+        }
+	}
+	
+}
+
+void title_case(char *s)
+{
+	int i = 0;
+
+	if (s[i] >= 'a' && s[i] <= 'z')
+	{
+		s[i] = s[i] - 32;
+	}
+	
+}

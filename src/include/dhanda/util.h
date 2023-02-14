@@ -40,6 +40,14 @@ void success();
 void print_success(char *s);
 void print_error(char *s);
 void print_warning(char *s);
+void print_heading(char *s);
+void italic();
+void framed();
+int check_name(char *s);
+void input_valid_string(char *in, size_t size, int (*validator)(char *));
+void title_case(char *s);
+int check_phone(char *s);
+void check_amount(char res);
 
 void centreprint(char *s);
 
