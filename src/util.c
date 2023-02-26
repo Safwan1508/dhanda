@@ -177,20 +177,46 @@ void input_valid_string(char *in, size_t size, int (*validator)(char *))
 	
 }
 
-void check_amount(char  res)
-{
-	while (1)
-	{
-		if (res == 1) {
-            break;
-        } else {
-            printf("Invalid input. Please enter a number.\n");
-			printf("              >  ");
-            while ((res = getchar()) != '\n' && res != EOF);
-        }
+void input_amount(int *in, int (*validator)(char *)) {
+	char amount[10];
+
+	while(1) {
+		printf("> ");
+		get_string(amount, 10);
+			
+		if(validator(amount) == 0) {
+			long ret = strtol(amount, NULL, 10);
+			*in = (int) ret;
+			break;
+		}
+		
+		printf("Invalid input\n");
 	}
-	
+
 }
+
+int validate_amount(char *str) {
+		//regular expression
+		char *pattern = "^[0-9]{1,10}$";
+		char buf[1024];
+		int err;
+
+		regex_t rgx;
+
+		if ((err = regcomp(&rgx, pattern, REG_EXTENDED)) != 0) {
+			 regerror(err, &rgx, buf, sizeof(buf));
+			 printf("%s\n", buf);
+			return -1;
+		}
+
+		if (regexec(&rgx, str, 0, NULL, 0) == REG_NOMATCH) {
+			return -1;
+		}
+
+		return 0;
+}
+
+
 
 void title_case(char *s)
 {
@@ -201,4 +227,61 @@ void title_case(char *s)
 		s[i] = s[i] - 32;
 	}
 	
+}
+
+void created_at(time_t t) {
+	struct tm *tm;
+	char timestr[128];
+
+	tm = localtime(&t);
+
+	strftime(timestr, sizeof(timestr), "%Y-%m-%d %T", tm);
+
+	printf("%s\n", timestr);
+
+}
+
+char *created_time(time_t t){
+	struct tm *tm;
+	char *timestr = malloc(sizeof(char) *128);
+
+	tm = localtime(&t);
+	strftime(timestr, 128, "%Y-%m-%d %T", tm);
+
+	return timestr;
+
+
+}
+
+char *updated_time(time_t t){
+	struct tm *tm;
+	char *timestr = malloc(sizeof(char) *128);
+
+	tm = localtime(&t);
+	strftime(timestr, 128, "%Y-%m-%d %T", tm);
+
+	return timestr;
+
+
+}
+
+void updated_at(time_t t) {
+	struct tm *tm;
+	char timestr[128];
+
+	tm = localtime(&t);
+
+	strftime(timestr, sizeof(timestr), "%Y-%m-%d %T", tm);
+
+	printf("%s\n", timestr);
+}
+
+time_t unix_time(char *timestr){
+	struct tm tm = {};
+
+	strptime(timestr, "%Y-%m-%d %T", &tm );
+
+	time_t t = mktime(&tm);
+
+	return t;
 }

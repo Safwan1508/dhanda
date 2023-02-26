@@ -15,7 +15,8 @@ void ui_txn_create(struct dhanda *app)
 	scanf("%d", &t.party_id);
 	printf("\n");
 	printf("   AMOUNT   : ");
-	scanf("%d", &t.amount);
+	input_amount(&t.amount, validate_amount);
+	//scanf("%d", &t.amount);
 	printf("\n");
 	printf("[O FOR CRED, 1 FOR DEBT]\n");
 	printf("   TYPE     : ");

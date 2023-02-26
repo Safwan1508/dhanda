@@ -3,7 +3,7 @@
 
 int txn_add(dhanda *app, txn *txn)
 {
-	struct txn temp;
+	/*struct txn temp;
 	int init_posn, fin_posn, txn_id;
 	debug_print("");
 
@@ -31,4 +31,7 @@ int txn_add(dhanda *app, txn *txn)
 		return 0;
 	else
 		return -1;
+		*/
+
+	return 0;
 }

@@ -12,8 +12,7 @@ void ui_party_show(struct dhanda *app)
 	char phone[12];
 	int amount;
 	struct tm* tm;
-	char created_at[64];
-	char updated_at[64];
+
 
 
 	debug_print("");
@@ -32,6 +31,8 @@ void ui_party_show(struct dhanda *app)
 
 	printf("   PHONE NO   : %s               \n\n", p->phone);
 	//p.created_at = t;
+	printf("Created At:	");
+	created_at(p->cat);
 
 
 	//tm = localtime(&p->created_at);

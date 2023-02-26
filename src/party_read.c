@@ -6,76 +6,86 @@
 
 int party_findbyid(dhanda *app, int id, party *result)
 {
-	int ret;
+	int ret;											/*return -1 for error*/
 	int found = 0;
+	char sql[1024];
+	char *err = NULL;
+	int is_found = 0;
 
-	debug_print("");
-	
-	fseek(app->party_fp, 0, SEEK_SET);
-	while((ret = fread(result, sizeof(party), 1, app->party_fp)) > 0) {
-		if(id == result->id) {
-			found = 1;
-			break;
-		}
+	sprintf(sql, "SELECT * FROM parties WHERE id = %d", id);
+
+	result->id = 0;
+	ret = sqlite3_exec(app->db, sql, put_in_party_struct, (void *) result, &err);
+	if (ret != SQLITE_OK) {
+		fprintf(stderr, "sqlite_exec: %s\n", err);
+		return -1;
 	}
-	if (ferror(app->party_fp))
-		found = -1;
 
-	return found;
+	if (result->id == 0) {
+		//app_error_set(app, "Party not found");
+		return 0;
+	}
+
+	//app_success_set(app, "Party found");
+	return 1;
 }
 
 
 int party_search(dhanda *app, char *query, struct list *result)
 {
-	party temp;
-	Node *node;
-	int matched = 0;
+	int ret;
+	char sql[1024];
+	char *err = NULL;
+	int is_found = 0;
 
-	debug_print("");
-	
-	fseek(app->party_fp, 0, SEEK_SET); 
-	while(fread(&temp, sizeof(temp), 1, app->party_fp) > 0) {
-		if(strstr(temp.phone, query)) {
-			matched = 1;
-			node = list_new_node(result, (void *) &temp);
-			list_insert_end(result, node);
-		}
-		
-		if(!node)
-			break;
+	sprintf(sql, "SELECT * FROM parties WHERE phone LIKE '%%%s%%' OR first_name LIKE '%%%s%%'",
+		query,
+		query);
+
+	ret = sqlite3_exec(app->db, sql, put_in_party_list, (void *) result, &err);
+	if (ret != SQLITE_OK) {
+		fprintf(stderr, "sqlite3_exec: %s\n", err);
+		return -1;
 	}
-	return matched;
+
+	if (result->head == NULL) {
+		//app_error_set(app, "Party not found");
+		return -1;
+	}
+
+	//app_success_set(app, "Party searched successfully");
+
+	return 0;
 	
 }
 			
 
 int party_get(dhanda *app, party_filter filter, struct list *result)
 {
-	List *list;
-	party temp;
-	int count = 0, offset;
-	Node *node;
+	int ret;
+	char *err = NULL;
+	char sql[1024];
 
-	debug_print("");
-	
-	/*offset = (filter.page - 1) * filter.items * sizeof(party);
-	fseek(app->party_fp, offset * -1, SEEK_END);*/
-	
-	fseek(app->party_fp, 0, SEEK_SET);
-	while(fread(&temp, sizeof(temp), 1, app->party_fp) > 0) {
-		if(count >= filter.items)
-			break;
-			
-		node = list_new_node(result, (void *) &temp);
-		list_insert_end(result, node);
-		count++;
-		
-		if(node == NULL) 
-			break;
+	sprintf(sql, "SELECT * FROM parties");
+
+	ret = sqlite3_exec(app->db, sql, put_in_party_list, (void *) result, &err);
+	if (ret != SQLITE_OK) {
+		fprintf(stderr, "sqlite3_exec error: %s\n", err);
+		return -1;
 	}
-	
-	return count;
+
+	if (result->head == NULL) {
+		//app_error_set(app, "Party not found");
+		return 0;
+	}
+
+	//app_success_set(app, "Party found");
+	return 1;
 }
+
+
+
+
 		
 
 		

@@ -3,7 +3,7 @@
 
 int txn_findbyid(dhanda *app, int id, txn *result)
 {
-	int matched = 0;
+	/*int matched = 0;
 
 	debug_print("");
 
@@ -13,7 +13,7 @@ int txn_findbyid(dhanda *app, int id, txn *result)
 			matched = 1;
 			break;
 		}
-	}
+	
 	if(matched == 0) {
 		if(ferror(app->txn_fp))
 			matched = -1;
@@ -21,7 +21,8 @@ int txn_findbyid(dhanda *app, int id, txn *result)
 		else
 			matched = 0;
 	}
-	return matched;
+	return matched;*/
+	return 0;
 
 
 }
@@ -30,7 +31,7 @@ int txn_findbyid(dhanda *app, int id, txn *result)
 	
 int txn_search(dhanda *app, char *query, struct list *result)
 {
-	Node *n;
+	/*Node *n;
 	txn temp;
 	int matched = 0;
 	debug_print("");
@@ -49,15 +50,18 @@ int txn_search(dhanda *app, char *query, struct list *result)
 			matched = 0;
 			break;
 		}
-		*/
+		
 	}
 
 	return matched;
+	*/
+	return 0;
+	
 }
 
 int txn_findbytype(dhanda *app, int type, struct list *result)
 {	
-	txn temp;
+	/*txn temp;
 	int count;
 	Node *n;
 
@@ -73,12 +77,13 @@ int txn_findbytype(dhanda *app, int type, struct list *result)
 		}
 	}
 
-	return count;
+	return count;*/
+	return 0;
 }
 
 int txn_get(dhanda *app, txn_filter filter, struct list *result)
 {
-	txn temp;
+	/*txn temp;
 	Node *node;
 	int count, offset;
 	debug_print("");
@@ -99,4 +104,5 @@ int txn_get(dhanda *app, txn_filter filter, struct list *result)
 	}
 
 	return count;
+	*/
 }

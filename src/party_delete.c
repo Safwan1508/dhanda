@@ -7,37 +7,20 @@
 
 int party_delete(dhanda *app, party *party)
 {
-	struct party temp;
-	int matched = -1;
-	int trunc_size, count = 0;
+	int ret;
+	char sql[1024];
+	char *err = NULL;
 
-	debug_print("");
-	
-	fseek(app->party_fp, 0, SEEK_SET);
-	while(fread(&temp, sizeof(temp), 1, app->party_fp) > 0) {
-		if(party->id == temp.id) {
-			matched = 0;	
-			break;
-		}
-		count++;
+	sprintf(sql, "DELETE FROM parties WHERE id = '%d'", party->id);
+
+	ret = sqlite3_exec(app->db, sql, NULL, NULL, &err);
+	if (ret != SQLITE_OK) {
+		fprintf(stderr, "sqlite3_exec error: %s\n", err);
+		return -1;
 	}
 
-	if (matched == -1)
-		return 0;
-	
-	
-	while(fread(&temp, sizeof(temp), 1, app->party_fp) > 0) {
-		fseek(app->party_fp, sizeof(temp) * -2, SEEK_CUR);
-		fwrite(&temp, sizeof(temp), 1, app->party_fp);
-		fseek(app->party_fp, sizeof(temp), SEEK_CUR);
-		count++;
-	}
-
-	fseek(app->party_fp, -sizeof(temp), SEEK_CUR);
-	trunc_size = sizeof(temp) * count;
-	ftruncate(fileno(app->party_fp), trunc_size);
-	
-	return matched;
+	//app_success_set(app, "Party deleted successfully");
+	return 0;
 }
 			
 	

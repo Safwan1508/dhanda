@@ -47,7 +47,13 @@ int check_name(char *s);
 void input_valid_string(char *in, size_t size, int (*validator)(char *));
 void title_case(char *s);
 int check_phone(char *s);
-void check_amount(char res);
+void input_amount(int *in, int (*validator)(char *));
+int validate_amount(char *in);
+void created_at(time_t t);
+void updated_at(time_t t);
+char *created_time(time_t t);
+char *updated_time(time_t t);
+time_t unix_time(char *timestr);
 
 void centreprint(char *s);
 

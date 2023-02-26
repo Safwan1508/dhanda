@@ -26,8 +26,10 @@ void ui_party_create(struct dhanda *app)
 	printf("\n");
 	printf("  AMOUNT     :  ");
 	//input_valid_string(p.amount, sizeof(p.amount), check_amount);
-    char res = scanf("%d",&p.amount);
-	check_amount(res);
+	input_amount(&p.amount, validate_amount);
+
+	time(&p.cat);
+	
 		
 	reset();
 

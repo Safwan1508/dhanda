@@ -1,37 +1,33 @@
 #include<dhanda/dhanda.h>
 #include<dhanda/party.h>
+#include <unistd.h>
 
 int party_add(dhanda *app, party *party)
 {
-      struct party p;
-      int new_id;
-      int ret1, ret2;
-      
+    char sql[1024];
+	char *err = NULL;
+	int ret;
 
-      int cur_pos = 0 , final_pos = 0;
+	char *cat = created_time(party->cat);
+	char *uat = updated_time(party->uat);
 
-      debug_print("");
+	sprintf(sql, "INSERT INTO parties(first_name, last_name, phone, amount, created_at, updated_at) VALUES('%s','%s', '%s', '%d', '%s', '%s')", party->fname,
+		party->lname,
+		party->phone,
+		party->amount,
+		cat,
+		uat);
 
-      fseek(app->party_fp, 0, SEEK_END);
-      if(!ftell(app->party_fp)) {
-           new_id = 1; 
-      }else{
-           fseek(app->party_fp, -sizeof(*party), SEEK_END);
-           ret1 = fread(&p, sizeof(p), 1, app->party_fp);
-           if(ret1 != 1)
-               return -1; 
-          new_id = p.id;
-          new_id++; 
-     }
-      party->id = new_id;
+	ret = sqlite3_exec(app->db, sql, NULL, NULL, &err);
+	if (ret != SQLITE_OK) {
+		fprintf(stderr, "sqlite3_exec error: %s\n", err);
+		//app_error_set(app, "Failed to add party");
+		return -1;
+	}
 
-      cur_pos = ftell(app->party_fp);
-      ret2 = fwrite(party, sizeof(*party), 1, app->party_fp);
-      final_pos = ftell(app->party_fp);
+	party->id = sqlite3_last_insert_rowid(app->db);
 
-      if(ret1 == sizeof(*party) && ret2 == sizeof(*party))
-	    return 0;
-      else
-	    return -1;
+	//app_success_set(app, "Party added successfully");
+      return 0;
 }
 
