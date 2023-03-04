@@ -10,6 +10,7 @@ typedef struct txn {
 	int type;
 	char desc[256];
 	int party_id;
+	time_t uat;
 } txn;
 
 typedef struct txn_stat {

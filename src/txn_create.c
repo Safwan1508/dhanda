@@ -33,5 +33,30 @@ int txn_add(dhanda *app, txn *txn)
 		return -1;
 		*/
 
-	return 0;
+	char sql[1024];
+	char *err = NULL;
+	int ret;
+
+	char *cat = created_time(txn->cat);
+	char *uat = updated_time(txn->uat);
+
+	sprintf(sql, "INSERT INTO transaction(party_id, amount, type, amount, created_at, updated_at) VALUES('%d','%d', '%d', '%s', '%s', '%s')", txn->party_id,
+		txn->amount,
+		txn->type,
+		txn->desc,
+		cat,
+		uat);
+	ret = sqlite3_exec(app->db, sql, NULL, NULL, &err);
+	if (ret != SQLITE_OK) {
+		fprintf(stderr, "sqlite3_exec error: %s\n", err);
+		//app_error_set(app, "Failed to add party");
+		return -1;
+	}
+
+	//app_success_set(app, "Party added successfully");
+      return 0;
+
+
+
+
 }
