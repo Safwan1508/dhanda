@@ -55,6 +55,7 @@ typedef struct dhanda {
 } dhanda;
 
 void dhanda_init_app(dhanda *app);
+
 void dhanda_app_cleanup(dhanda *app);
 
 void dhanda_app_print_helpline(dhanda *app);

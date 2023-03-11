@@ -30,6 +30,8 @@ int txn_search(dhanda *app, char *query, struct list *result);
 int txn_get(dhanda *app, txn_filter filter, struct list *result);
 int txn_findbytype(dhanda *app, int type, struct list *result);
 int txn_getstat(dhanda *app, txn_filter filter, txn_stat *result);
+int put_in_txn_list(void *ptr, int ncols, char **values, char **fields);
+int put_in_txn_struct(void *ptr, int ncols, char **values, char **fields);
 
 /* Handy functions for passing data from Data layer to UI layer, since
  * UI functions only takes one argument and are called using callback

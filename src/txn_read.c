@@ -22,7 +22,19 @@ int txn_findbyid(dhanda *app, int id, txn *result)
 			matched = 0;
 	}
 	return matched;*/
-	return 0;
+
+	int ret;
+	char *err = NULL;
+	char sql[1024];
+
+	sprintf(sql, "SELECT * FROM transactions WHERE id = %d", id);
+	ret = sqlite3_exec(app->db, sql, put_in_txn_struct, (void *) result, &err);
+	if (ret != SQLITE_OK) {
+		fprintf(stderr, "sqlite3_exec: %s\n", err);
+		return -1;
+	}
+
+	return 1;
 
 
 }
@@ -55,7 +67,28 @@ int txn_search(dhanda *app, char *query, struct list *result)
 
 	return matched;
 	*/
-	return 0;
+
+	int ret;
+	char *err = NULL;
+	char sql[1024];
+
+	int pid = atoi(query);
+
+	sprintf(sql, "SELECT * FROM transactions WHERE party_id = %d", pid);
+
+	ret = sqlite3_exec(app->db, sql, put_in_txn_list, (void *) result, &err);
+	if (ret != SQLITE_OK) {
+		fprintf(stderr, "sqlite3_exec: %s\n", err);
+		return 0;
+
+	}
+
+	if (result->head == NULL) {
+		//app_error_set(app, "Transaction not found");
+		return -1;
+	}
+
+	return 1;
 	
 }
 
@@ -78,6 +111,24 @@ int txn_findbytype(dhanda *app, int type, struct list *result)
 	}
 
 	return count;*/
+	int ret;
+	char *err = NULL;
+	char sql[1024];
+
+	sprintf(sql, "SELECT * FROM transactions WHERE type = %d", type);
+
+	ret = sqlite3_exec(app->db, sql, put_in_txn_list, (void *) result, &err);
+	if (ret != SQLITE_OK) {
+		fprintf(stderr, "sqlite3_exec error: %s\n", err);
+		return 0;
+	}
+
+	if (result->head == NULL) {
+		//app_error_set(app, "Transaction not found");
+		return -1;
+	}
+
+	//app_success_set(app, "Transaction found");
 	return 0;
 }
 
@@ -105,4 +156,26 @@ int txn_get(dhanda *app, txn_filter filter, struct list *result)
 
 	return count;
 	*/
+	int ret;
+	char *err = NULL;
+	char sql[1024];
+	int offset;
+
+	offset = (filter.page - 1) * filter.items;
+
+	sprintf(sql, "SELECT * FROM transactions ORDER BY id DESC LIMIT %d OFFSET %d", filter.items, offset);
+
+	ret = sqlite3_exec(app->db, sql, put_in_txn_list, (void *) result, &err);
+	if (ret != SQLITE_OK) {
+		fprintf(stderr, "sqlite3_exec error: %s\n", err);
+		return -1;
+	}
+
+	if (result->head == NULL) {
+		//app_error_set(app, "Transaction not found");
+		return 0;
+	}
+
+	//app_success_set(app, "Transaction found");
+	return 1;
 }

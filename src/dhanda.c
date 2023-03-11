@@ -22,6 +22,8 @@ static void dhanda_resolve_show_renderer(dhanda *app);
 static void dhanda_resolve_search_renderer(dhanda *app);
 static void dhanda_resolve_edit_renderer(dhanda *app);
 static void dhanda_resolve_delete_renderer(dhanda *app);
+static void
+dhanda_db_init(dhanda *app);
 
 void dhanda_app_reset(dhanda *app);
 
@@ -137,6 +139,8 @@ dhanda_init_app(struct dhanda *app)
 	fprintf(stderr, "sqlite3_open: %s\n", sqlite3_errmsg(app->db));
  		exit(EXIT_FAILURE);
  	}
+
+	dhanda_db_init(app);
 
 	app->party_list = list_create(sizeof(party));
 	app->txn_list 	= list_create(sizeof(txn));
@@ -546,6 +550,45 @@ dhanda_resolve_delete_renderer(dhanda *app)
 		case SCREEN_PARTY: 	app->renderer = ui_party_list; break;
 		default: app->renderer = NULL;
 	}
+}
+
+
+static void
+dhanda_db_init(dhanda *app)
+{
+	int ret;
+	char *user_party_sql = "CREATE TABLE parties ("
+							"id INTEGER PRIMARY KEY AUTOINCREMENT,"
+							"first_name VARCHAR(32) NOT NULL,"
+							"last_name VARCHAR(32),"
+							"phone VARCHAR(12) NOT NULL UNIQUE,"
+							"amount INTEGER DEFAULT 0,"
+							"created_at DATETIME NOT NULL,"
+							"updated_at DATETIME NOT NULL"
+							")";
+	char *user_txn_sql = "CREATE TABLE transactions ("
+							"id INTEGER PRIMARY KEY AUTOINCREMENT,"
+							"amount INTEGER,"
+							"created_at DATETIME,"
+							"type CHAR(2),"
+							"desc VARCHAR(256),"
+							"party_id INTEGER,"
+							"FOREIGN KEY(party_id) REFERENCES parties(id)"
+							")";
+	char *party_err = NULL;
+	char *txn_err = NULL;
+
+
+	ret = sqlite3_exec(app->db, user_party_sql, NULL, NULL, &party_err);
+	if (ret != SQLITE_OK) {
+		fprintf(stderr, "sqlite3_exec: %s\n", party_err);
+	}
+
+	ret = sqlite3_exec(app->db, user_txn_sql, NULL, NULL, &txn_err);
+	if (ret != SQLITE_OK) {
+		fprintf(stderr, "sqlite3_exec: %s\n", txn_err);
+	}
+
 }
 
 

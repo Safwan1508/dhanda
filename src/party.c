@@ -39,41 +39,31 @@ party_second_in_list(dhanda *app)
 }
 
 
- int put_in_party_struct(void *ptr, int ncols, char **values, char **fields)
- {
- 	party *temp = (party *) ptr;
-	
- 	temp->id = (int) strtol(values[0], NULL, 10);
- 	strcpy(temp->fname, values[1]);
- 	strcpy(temp->lname, values[2]);
- 	strcpy(temp->phone, values[3]);
- 	temp->amount = (int) strtol(values[4], NULL, 10);
- 	temp->cat = unix_time(values[5]);
- 	temp->uat = unix_time(values[6]);
+int party_update_amount(struct dhanda *app, int pid, int val, int type)
+{
+	struct party p = {};
+	int ret, sign = -1;
+	char *err = NULL;
+	char sql[1024];
 
- 	return SQLITE_OK;
-		
- }
+	if (type == 0) {
+		val *= sign;
+	}
 
+	sprintf(sql, "UPDATE parties SET amount = amount + %d WHERE id = %d", val, pid);
 
- int put_in_party_list(void *ptr, int ncols, char **values, char **fields)
- {
- 	Node *node;
- 	party temp = {};
+	ret = sqlite3_exec(app->db, sql, NULL, NULL, &err);
+	if (ret != SQLITE_OK) {
+		fprintf(stderr, "sqlite3_exec error: %s\n", err);
+		return -1;
+	}
 
- 	temp.id = atoi(values[0]);
- 	strcpy(temp.fname, values[1]);
- 	strcpy(temp.lname, values[2]);
- 	strcpy(temp.phone, values[3]);
- 	temp.amount = atoi(values[4]);
- 	temp.cat = unix_time(values[5]);
- 	temp.uat = unix_time(values[6]);
+	return 0;
+}
 
 
- 	node = list_new_node((struct list *) ptr, (void *) &temp);
- 	list_insert_end((struct list *) ptr, node);
+ 
 
- 	return SQLITE_OK;
-		
- }
+
+ 
 
