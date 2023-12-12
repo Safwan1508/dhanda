@@ -1,5 +1,7 @@
 dhanda
 !dhanda/
+dhanda.so
+cert/
 
 .*
 !.gitignore
